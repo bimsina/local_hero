@@ -18,6 +18,8 @@ class LocalHeroScope extends StatefulWidget {
     this.curve = Curves.linear,
     this.createRectTween = _defaultCreateTweenRect,
     required this.child,
+    this.overlayAbove,
+    this.overlayBelow,
   }) : super(key: key);
 
   /// The duration of the animation.
@@ -36,6 +38,16 @@ class LocalHeroScope extends StatefulWidget {
   ///
   /// {@macro flutter.widgets.child}
   final Widget child;
+
+  /// Insert the given entry into the overlay.
+  ///
+  /// If `overlayBelow` is non-null, the entry is inserted just below `overlayBelow`.
+  /// If `overlayAbove` is non-null, the entry is inserted just above `overlayAbove`.
+  /// Otherwise, the entry is inserted on top.
+  ///
+  /// It is an error to specify both `overlayAbove` and `overlayBelow`.
+  final OverlayEntry? overlayAbove;
+  final OverlayEntry? overlayBelow;
 
   @override
   _LocalHeroScopeState createState() => _LocalHeroScopeState();
@@ -83,6 +95,8 @@ class _LocalHeroScopeState extends State<LocalHeroScope>
     final _LocalHeroTracker tracker = _LocalHeroTracker(
       controller: controller,
       overlayEntry: overlayEntry,
+      overlayAbove: widget.overlayAbove,
+      overlayBelow: widget.overlayBelow,
     );
 
     tracker.addOverlay(context);
@@ -131,10 +145,15 @@ class _LocalHeroTracker {
   _LocalHeroTracker({
     required this.overlayEntry,
     required this.controller,
+    this.overlayAbove,
+    this.overlayBelow,
   });
 
   final OverlayEntry overlayEntry;
   final LocalHeroController controller;
+
+  final OverlayEntry? overlayAbove, overlayBelow;
+
   int count = 0;
 
   bool _removeRequested = false;
@@ -145,7 +164,8 @@ class _LocalHeroTracker {
 
     SchedulerBinding.instance!.addPostFrameCallback((_) {
       if (!_removeRequested) {
-        overlayState!.insert(overlayEntry);
+        overlayState!
+            .insert(overlayEntry, above: overlayAbove, below: overlayBelow);
         _overlayInserted = true;
       }
     });
