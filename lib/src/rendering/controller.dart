@@ -16,7 +16,7 @@ class LocalHeroController {
     required this.curve,
     required this.createRectTween,
     required this.tag,
-  })   : link = LayerLink(),
+  })  : link = LayerLink(),
         _vsync = vsync,
         _initialDuration = duration;
 
