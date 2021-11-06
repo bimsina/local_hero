@@ -24,7 +24,12 @@ class RenderLocalHeroLeaderLayer extends RenderProxyBox {
       _controller.removeStatusListener(_onAnimationStatusChanged);
       _controller = value;
       _controller.addStatusListener(_onAnimationStatusChanged);
-      markNeedsPaint();
+      try {
+        markNeedsPaint();
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        /// TODO figure out why this is happening
+      }
     }
   }
 
@@ -106,7 +111,12 @@ class RenderLocalHeroFollowerLayer extends RenderProxyBox {
       _controller.removeListener(markNeedsLayout);
       _controller = value;
       _controller.addListener(markNeedsLayout);
-      markNeedsPaint();
+      try {
+        markNeedsPaint();
+        // ignore: avoid_catches_without_on_clauses
+      } catch (e) {
+        /// TODO figure out why this is happening
+      }
     }
   }
 
